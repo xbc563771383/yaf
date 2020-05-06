@@ -5,6 +5,7 @@
  * @desc 默认控制器
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
  */
+use Illuminate\Database\Capsule\Manager as DB;
 class IndexController extends BaseController {
     /**
      * 默认初始化方法，如果不需要，可以删除掉这个方法
@@ -25,7 +26,8 @@ class IndexController extends BaseController {
 	}
 
     public function testAction() {
-        $res = \Illuminate\Support\Facades\DB::table('users')->select('name');
+//        $res = DB::beginTransaction();
+        $res = DB::table('user')->first();
         print_r($res);die;
         $name = $this->getRequest()->getPost('name', '');
         $pwd = $this->getRequest()->getPost('pwd', '');
