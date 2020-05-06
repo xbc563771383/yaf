@@ -27,6 +27,8 @@ class IndexController extends BaseController {
 
     public function testAction() {
 //        $res = DB::beginTransaction();
+//        DB::rollback();
+//        DB::commit();
         $res = DB::table('user')->first();
         print_r($res);die;
         $name = $this->getRequest()->getPost('name', '');
