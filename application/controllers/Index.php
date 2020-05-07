@@ -26,16 +26,9 @@ class IndexController extends BaseController {
 	}
 
     public function testAction() {
-//        $res = DB::beginTransaction();
-//        DB::rollback();
-//        DB::commit();
-        $res = DB::table('user')->first();
-        print_r($res);die;
         $name = $this->getRequest()->getPost('name', '');
         $pwd = $this->getRequest()->getPost('pwd', '');
-
-        $list = UserModel::where([['name', '=', $name], ['pwd', '=', $pwd]])->first();
-        $this->getResponse()->setBody(json_encode($list));
+        $this->getResponse()->setBody(json_encode($pwd));
         return true;
     }
 }

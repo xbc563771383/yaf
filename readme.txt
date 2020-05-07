@@ -48,3 +48,21 @@ $this->getRequest()->isCli();
 $this->getResponse()->setBody("Hello World");
 $this->getResponse()->response();
 https://www.laruence.com/manual/yaf.class.session.html;关于session
+
+事务
+use Illuminate\Database\Capsule\Manager as DB;
+DB::beginTransaction();
+DB::rollback();
+DB::commit();
+DB::table('user')->first();
+$name = $this->getRequest()->getPost('name', '');
+$pwd = $this->getRequest()->getPost('pwd', '');
+
+原生sql有注入危险
+$list = DB::select("select * from `user` where (`name` = 'xiebaichuan' and `pwd` = '".$pwd."') limit 1");
+Xbc@9023' or '1' = '1
+
+
+
+orm使用手册
+https://learnku.com/docs/laravel-cheatsheet/5.1
