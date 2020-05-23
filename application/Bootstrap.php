@@ -23,18 +23,13 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract {
 	}
 
     public function _initError(\Yaf\Dispatcher $dispatcher) {
-        /**
-         * 一般可放在Bootstrap中定义错误处理函数
-         */
-        function myErrorHandler($errno, $errstr, $errfile, $errline, $errcontext) {
-            echo $errno.PHP_EOL;
-            echo $errstr.PHP_EOL;
-            echo $errfile.PHP_EOL;
-            echo $errline.PHP_EOL;
-            // print_r($errcontext).PHP_EOL;
-            return true;
+        if($this->config->application->debug) {
+            define('DEBUG_MODE', false);
+            ini_set('display_errors', 'On');
+        } else {
+            define('DEBUG_MODE', false);
+            ini_set('display_errors', 'Off');
         }
-        \Yaf\Dispatcher::getInstance()->setErrorHandler("myErrorHandler");
     }
 
     public function _initPlugin(\Yaf\Dispatcher $dispatcher) {
@@ -54,7 +49,7 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract {
 
     public function _initDefaultName(\Yaf\Dispatcher $dispatcher) {
         // 设置默认的接口
-        $dispatcher->setDefaultModule("Index")->setDefaultController("Index")->setDefaultAction("index");
+        $dispatcher->setDefaultModule('Index')->setDefaultController('Index')->setDefaultAction('index');
     }
 
     public function _initDatabase(\Yaf\Dispatcher $dispatcher) {

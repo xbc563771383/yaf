@@ -25,9 +25,13 @@ class IndexController extends BaseController {
 	}
 
     public function testAction() {
-        print_r(strlen($this->getRequest()->getPost('name')));die;
-        $this->getResponse()->setBody(json_encode(['ok' =>1]));
+        $res = \Illuminate\Support\Facades\DB::table('users')->select('name');
+        print_r($res);die;
+        $name = $this->getRequest()->getPost('name', '');
+        $pwd = $this->getRequest()->getPost('pwd', '');
+
+        $list = UserModel::where([['name', '=', $name], ['pwd', '=', $pwd]])->first();
+        $this->getResponse()->setBody(json_encode($list));
         return true;
-	    $a = $this->getRequest()->getParams();
     }
 }
