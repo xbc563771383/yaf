@@ -66,3 +66,6 @@ Xbc@9023' or '1' = '1
 
 orm使用手册
 https://learnku.com/docs/laravel-cheatsheet/5.1
+
+cli模式使用
+php index.php "cli/countMessageLookNum" "a=100&b=10"

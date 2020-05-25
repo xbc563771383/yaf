@@ -11,6 +11,7 @@
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Container\Container;
+//use Illuminate\Database\Capsule\Manager as DB;
 
 class Bootstrap extends \Yaf\Bootstrap_Abstract {
     public $config;
@@ -18,8 +19,8 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract {
     public function _initConfig() {
         //把配置保存起来
         $this->config = \Yaf\Application::app()->getConfig();
+        \Yaf\Registry::set('config', $this->config);
         \Yaf\Dispatcher::getInstance()->autoRender(FALSE);
-		\Yaf\Registry::set('config', $this->config);
 	}
 
     public function _initError(\Yaf\Dispatcher $dispatcher) {
@@ -64,5 +65,19 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract {
         $capsule->bootEloquent();
     }
 
+    public function _initRedis(\Yaf\Dispatcher $dispatcher)
+    {
+        $redisServers = [
+            '59.110.163.148:6381',
+            '59.110.163.148:6382',
+            '59.110.163.148:6383',
+            '59.110.163.148:6384',
+            '59.110.163.148:6385',
+            '59.110.163.148:6386',
+        ];
+
+        $redis = new \RedisCluster(null, $redisServers);
+        \Yaf\Registry::set('redis', $redis);
+    }
 
 }
