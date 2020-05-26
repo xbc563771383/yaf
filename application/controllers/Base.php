@@ -129,33 +129,62 @@ class BaseController extends \Yaf\Controller_Abstract {
         }
 
         $logFile = APPLICATION_PATH.'/log/'.$file;
+
+        $logData[] = PHP_EOL;
         $logStr = implode("\t", $logData);
 
-        $flag = true;
-        $fp = new \SplFileObject($logFile, 'a');
-        $lock = $fp->flock(LOCK_EX);
-        if(!$lock) {
-            $flag = false;
-        }
+        $fp = null;
+        $lock = false;
 
         try {
-            $write = $fp->fwrite($logStr.PHP_EOL, strlen($logStr.PHP_EOL));
-            if(!$write) {
-                $flag = false;
+            $fp = new \SplFileObject($logFile, 'a');
+            if(!$fp) {
+                // TODO 打开文件失败
             }
         } catch (\Exception $e) {
-            $flag = false;
+            // TODO 打开文件异常
+        }
+
+        if($fp !== null) {
+            try {
+                $lock = $fp->flock(LOCK_EX);
+                if(!$lock) {
+                    // TODO 文件加锁失败
+                } else {
+                    $lock = true;
+                }
+            } catch (\Exception $e) {
+                // TODO 文件加锁异常
+            }
+        }
+
+        if(($fp !== null) && $lock) {
+            try {
+                $write = $fp->fwrite($logStr, strlen($logStr));
+                if(!$write) {
+                    // TODO 文件写入失败
+                }
+            } catch (\Exception $e) {
+                // TODO 文件写入异常
+            }
         }
 
         if($lock) {
-            $unlock = $fp->flock(LOCK_UN);
-            if(!$unlock) {
-                // TODO 释放文件锁失败
+            try {
+                $unlock = $fp->flock(LOCK_UN);
+                if(!$unlock) {
+                    // TODO 释放文件锁失败
+                }
+            } catch (\Exception $e) {
+                // TODO 释放文件锁异常
             }
         }
 
-        $fp = null;
-        return $flag;
+        if($fp !== null) { // 释放文件资源
+            $fp = null;
+        }
+
+        return true;
     }
 
 }

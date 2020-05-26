@@ -22,11 +22,12 @@ class CliController extends BaseController {
      * 对于如下的例子, 当访问http://yourhost/yaf_skeleton/index/index/index/name/root 的时候, 你就会发现不同
      */
     public function countMessageLookNumAction() {
-        $dateTime = $this->getParam('date_time');
-        if(!$dateTime) {
-
+        $fileName = $this->getParam('file_name');
+        if($fileName) {
+            ParseLog::countMessageLookNum($fileName);
+            return true;
         }
+
+        return true;
     }
-
-
 }

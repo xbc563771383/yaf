@@ -81,12 +81,6 @@ class IndexController extends BaseController {
         }
 
         $logArr = [$messageId];
-        if($this->userInfo) {
-            $logArr[] = $this->userInfo['id'];
-        } else {
-            $logArr[] = ' ';
-        }
-
         $this->writeLog('look_message_'.date('Y_m_d_H_i').'.log', $logArr);
 
         $cacheKey = $this->getCachePrefix().$messageId;
