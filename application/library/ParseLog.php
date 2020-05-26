@@ -48,7 +48,7 @@ class ParseLog {
                     $str = $fp->current();
                     if($str) {
                         $arr = explode("\t", $str);
-                        if(isset($arr[0]) && $arr[0]) {
+                        if(is_array($arr) && isset($arr[0]) && $arr[0]) {
                             if(isset($updateData[$arr[0]])) {
                                 $updateData[$arr[0]] = $updateData[$arr[0]]+1;
                             } else {

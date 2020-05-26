@@ -80,20 +80,20 @@ class IndexController extends BaseController {
             return true;
         }
 
-        $logArr = [$messageId];
-        $this->writeLog(date('Y_m_d_H_i'), $logArr);
-
         $cacheKey = $this->getCachePrefix().$messageId;
         $messageInfo = $this->getRedis()->get($cacheKey);
-        if($messageInfo) {
-            $this->setBody($messageInfo);
-            return true;
+        if(!$messageInfo) {
+            $messageInfo = MessageModel::whereId($messageId)->first();
+            $messageInfo = $this->getJson(1200, $messageInfo);
+            $this->getRedis()->set($cacheKey, $messageInfo, 60);
         }
 
-        $messageInfo = MessageModel::whereId($messageId)->first();
-        $json = $this->getJson(1200, $messageInfo);
-        $this->getRedis()->set($cacheKey, $json, 60);
-        $this->setBody($json);
+        if($messageInfo) {
+            $logArr = [$messageId];
+            $this->writeLog(date('Y_m_d_H_i'), $logArr);
+        }
+
+        $this->setBody($messageInfo);
         return true;
     }
 

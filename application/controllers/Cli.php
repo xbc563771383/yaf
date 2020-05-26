@@ -27,21 +27,25 @@ class CliController extends BaseController {
             ParseLog::countMessageLookNum($fileName);
         } else {
             $logDir = APPLICATION_PATH.'/log/lookNum/';
-            $timeLine = strtotime(date('Y-m-d H:i'));
+            $timeLine = bcsub(time(), 60, 0);
 
             try {
                 if (false != ($handle = opendir($logDir))) {
                     while (false !== ($file = readdir($handle))) {
                         //去掉"“.”、“..”以及带“.xxx”后缀的文件
                         if ($file != "." && $file != "..") {
-                            $fileTimeLine = strtotime($file);
-                            if($fileTimeLine < $timeLine) {
-                                ParseLog::countMessageLookNum($file);
+                            $fileNameArr = explode('_', $file);
+                            if(is_array($fileNameArr) && isset($fileNameArr[0]) && isset($fileNameArr[1]) && isset($fileNameArr[2]) && isset($fileNameArr[3]) && isset($fileNameArr[4]) ) {
+                                $str = $fileNameArr[0].'-'.$fileNameArr[1].'-'.$fileNameArr[2].' '.$fileNameArr[3].':'.$fileNameArr[4];
+                                $fileTimeLine = strtotime($str);
+                                if($fileTimeLine < $timeLine) {
+                                    ParseLog::countMessageLookNum($file);
+                                }
                             }
                         }
                     }
                     //关闭句柄
-                    closedir ( $handle );
+                    closedir($handle);
                 }
             } catch (\Exception $e) {
                 // 异常
