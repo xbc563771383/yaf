@@ -8,7 +8,7 @@ class ParseLog {
      * @return bool
      */
     public static function countMessageLookNum($file = '') :bool {
-        $logFile = APPLICATION_PATH.'/log/'.$file;
+        $logFile = APPLICATION_PATH.'/log/lookNum/'.$file;
 
         if(!file_exists($logFile)) {
             return true;
@@ -98,6 +98,7 @@ class ParseLog {
         if($fp !== null) {
             $fp = null;
         }
+        unlink($logFile);
 
         return true;
     }

@@ -25,7 +25,27 @@ class CliController extends BaseController {
         $fileName = $this->getParam('file_name');
         if($fileName) {
             ParseLog::countMessageLookNum($fileName);
-            return true;
+        } else {
+            $logDir = APPLICATION_PATH.'/log/lookNum/';
+            $timeLine = strtotime(date('Y-m-d H:i'));
+
+            try {
+                if (false != ($handle = opendir($logDir))) {
+                    while (false !== ($file = readdir($handle))) {
+                        //去掉"“.”、“..”以及带“.xxx”后缀的文件
+                        if ($file != "." && $file != "..") {
+                            $fileTimeLine = strtotime($file);
+                            if($fileTimeLine < $timeLine) {
+                                ParseLog::countMessageLookNum($file);
+                            }
+                        }
+                    }
+                    //关闭句柄
+                    closedir ( $handle );
+                }
+            } catch (\Exception $e) {
+                // 异常
+            }
         }
 
         return true;

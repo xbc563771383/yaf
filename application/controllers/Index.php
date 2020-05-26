@@ -81,7 +81,7 @@ class IndexController extends BaseController {
         }
 
         $logArr = [$messageId];
-        $this->writeLog('look_message_'.date('Y_m_d_H_i').'.log', $logArr);
+        $this->writeLog(date('Y_m_d_H_i'), $logArr);
 
         $cacheKey = $this->getCachePrefix().$messageId;
         $messageInfo = $this->getRedis()->get($cacheKey);

@@ -128,7 +128,7 @@ class BaseController extends \Yaf\Controller_Abstract {
             return false;
         }
 
-        $logFile = APPLICATION_PATH.'/log/'.$file;
+        $logFile = APPLICATION_PATH.'/log/lookNum/'.$file;
 
         $logData[] = PHP_EOL;
         $logStr = implode("\t", $logData);
