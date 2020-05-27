@@ -13,7 +13,7 @@ class RegisterController extends BaseController
      * 用户注册的短信验证码的有效时长
      * @var int
      */
-    private $registerCode = 300;
+    private $registerCodeKeep = 300;
 
 
     /**
@@ -27,18 +27,24 @@ class RegisterController extends BaseController
             return true;
         }
 
+        $code = Help::getRedis()->get(RedisDataKey::$REGISTER_CODE.$mobile);
+        if($code) {
+            $this->setBody(Help::getJson(1701));
+            return true;
+        }
+
         $code = mt_rand(1000, 9999);
 
         // TODO 发送短信验证码 （先发送后写入，防止机器注册）
 
 
-        $res = Help::getRedis()->set(RedisDataKey::$REGISTER_CODE.$mobile, $code, $this->registerCode);
+        $res = Help::getRedis()->set(RedisDataKey::$REGISTER_CODE.$mobile, $code, $this->registerCodeKeep);
         if(!$res) {
-            $this->setBody(Help::getJson(1702));
+            $this->setBody(Help::getJson(1703));
             return true;
         }
 
-        $this->setBody(Help::getJson(1703));
+        $this->setBody(Help::getJson(1704));
         return true;
     }
 

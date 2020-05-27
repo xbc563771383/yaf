@@ -70,9 +70,15 @@ class LoginController extends BaseController
             return true;
         }
 
+        $code = Help::getRedis()->set(RedisDataKey::$RESET_PASSWORD_CODE.$mobile);
+        if($code) {
+            $this->setBody(Help::getJson(1501));
+            return true;
+        }
+
         $user = UserModel::where('mobile', '=', $mobile)->first();
         if(!$user) {
-            $this->setBody(Help::getJson(1501));
+            $this->setBody(Help::getJson(1502));
             return true;
         }
 
@@ -81,11 +87,11 @@ class LoginController extends BaseController
         $code = mt_rand(1000, 9999);
         $res = Help::getRedis()->set(RedisDataKey::$RESET_PASSWORD_CODE.$mobile, $code, $this->resetPasswordCodeKeep);
         if(!$res) {
-            $this->setBody(Help::getJson(1503));
+            $this->setBody(Help::getJson(1504));
             return true;
         }
 
-        $this->setBody(Help::getJson(1504));
+        $this->setBody(Help::getJson(1505));
         return true;
     }
 
