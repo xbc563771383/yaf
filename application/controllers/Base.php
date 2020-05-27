@@ -119,16 +119,17 @@ class BaseController extends \Yaf\Controller_Abstract {
 
 
     /**
+     * @param $path
      * @param $file
      * @param $logData
      * @return bool
      */
-    public function writeLog($file, $logData) :bool {
+    public function writeLog($path, $file, $logData) :bool {
         if(!$logData) {
             return false;
         }
 
-        $logFile = APPLICATION_PATH.'/log/lookNum/'.$file;
+        $logFile = LOG_PATH.'/'.$path.'/'.$file;
 
         $logData[] = PHP_EOL;
         $logStr = implode("\t", $logData);

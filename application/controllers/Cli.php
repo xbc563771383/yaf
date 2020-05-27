@@ -26,7 +26,7 @@ class CliController extends BaseController {
         if($fileName) {
             ParseLog::countMessageLookNum($fileName);
         } else {
-            $logDir = APPLICATION_PATH.'/log/lookNum/';
+            $logDir =LOG_PATH.'/lookNum/';
             $timeLine = bcsub(time(), 60, 0);
 
             try {

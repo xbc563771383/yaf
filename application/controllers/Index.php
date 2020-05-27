@@ -90,12 +90,38 @@ class IndexController extends BaseController {
 
         if($messageInfo) {
             $logArr = [$messageId];
-            $this->writeLog(date('Y_m_d_H_i'), $logArr);
+            $this->writeLog('lookNum', date('Y_m_d_H_i'), $logArr);
         }
 
         $this->setBody($messageInfo);
         return true;
     }
 
+
+
+    // 点赞帖子
+    public function likeMessageAction() {
+        $messageId = $this->getPost('message_id');
+        if(!$messageId || !is_numeric($messageId)) {
+            $this->setBody($this->getJson(1300));
+            return true;
+        }
+
+        $logArr = [$messageId];
+        if($this->userInfo) {
+            $logArr[] = $this->userInfo['id'];
+        } else {
+            $logArr[] = ' ';
+        }
+        $this->writeLog('likeNum', date('Y_m_d_H_i'), $logArr);
+        $this->setBody($this->getJson(1301));
+        return true;
+    }
+
+
+
+    public function addMessageAction() {
+
+    }
 
 }
