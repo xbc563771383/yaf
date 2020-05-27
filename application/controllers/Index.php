@@ -5,6 +5,8 @@
  * @desc 默认控制器
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
  */
+
+use Elasticsearch\ClientBuilder;
 class IndexController extends BaseController {
 
 	/**
@@ -121,7 +123,8 @@ class IndexController extends BaseController {
 
 
     public function addMessageAction() {
-
+        $client = ClientBuilder::create()->build();
+        print_r($client);die;
     }
 
 }

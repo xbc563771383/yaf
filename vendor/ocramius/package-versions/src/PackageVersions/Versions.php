@@ -26,6 +26,9 @@ final class Versions
   'doctrine/orm' => 'v2.7.2@dafe298ce5d0b995ebe1746670704c0a35868a6a',
   'doctrine/persistence' => '1.3.7@0af483f91bada1c9ded6c2cfd26ab7d5ab2094e0',
   'doctrine/reflection' => '1.2.1@55e71912dfcd824b2fdd16f2d9afe15684cfce79',
+  'elasticsearch/elasticsearch' => 'v7.7.0@1d90a7ff4fb1936dc4376f09d723af75714f6f05',
+  'ezimuel/guzzlestreams' => '3.0.1@abe3791d231167f14eb80d413420d1eab91163a8',
+  'ezimuel/ringphp' => '1.1.2@0b78f89d8e0bb9e380046c31adfa40347e9f663b',
   'illuminate/container' => 'v7.9.2@78a134ab5bcf6e6e50321dfb0d602b698898698d',
   'illuminate/contracts' => 'v7.9.2@4f9cad4bd982e9f100b1f0a42677fdd3bbfa48fd',
   'illuminate/database' => 'v7.9.2@6500fe6053bfa27f5bd0edb646090cc7709588ee',
@@ -34,7 +37,9 @@ final class Versions
   'nesbot/carbon' => '2.32.2@f10e22cf546704fab1db4ad4b9dedbc5c797a0dc',
   'ocramius/package-versions' => '1.4.2@44af6f3a2e2e04f2af46bcb302ad9600cba41c7d',
   'psr/container' => '1.0.0@b7ce3b176482dbbc1245ebf52b181af44c2cf55f',
+  'psr/log' => '1.1.3@0f73288fd15629204f9d42b7055f72dacbe811fc',
   'psr/simple-cache' => '1.0.1@408d5eafb83c57f6365a3ca330ff23aa4a5fa39b',
+  'react/promise' => 'v2.8.0@f3cff96a19736714524ca0dd1d4130de73dbbbc4',
   'symfony/console' => 'v5.0.8@5fa1caadc8cdaa17bcfb25219f3b53fe294a9935',
   'symfony/polyfill-mbstring' => 'v1.15.0@81ffd3a9c6d707be22e3012b827de1c9775fc5ac',
   'symfony/polyfill-php73' => 'v1.15.0@0f27e9f464ea3da33cbe7ca3bdf4eb66def9d0f7',
@@ -42,7 +47,7 @@ final class Versions
   'symfony/translation' => 'v5.0.8@c3879db7a68fe3e12b41263b05879412c87b27fd',
   'symfony/translation-contracts' => 'v2.0.1@8cc682ac458d75557203b2f2f14b0b92e1c744ed',
   'voku/portable-ascii' => '1.4.10@240e93829a5f985fab0984a6e55ae5e26b78a334',
-  '__root__' => 'No version set (parsed as 1.0.0)@',
+  '__root__' => 'dev-master@8be05cea55973e3b6b98eb687788dd771bcae174',
 );
 
     private function __construct()

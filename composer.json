@@ -2,6 +2,7 @@
     "require": {
         "doctrine/orm": "^2.7",
         "illuminate/database": "^7.9",
-        "illuminate/events": "^7.9"
+        "illuminate/events": "^7.9",
+        "elasticsearch/elasticsearch": "^7.7"
     }
 }
