@@ -6,7 +6,6 @@
  * @see http://www.php.net/manual/en/class.yaf-controller-abstract.php
  */
 
-use Elasticsearch\ClientBuilder;
 class IndexController extends BaseController {
 
 	/**
@@ -29,7 +28,7 @@ class IndexController extends BaseController {
         }
 
         $cacheKey = $this->getCachePrefix();
-        $bannerList = $this->getRedis()->get($cacheKey);
+        $bannerList = Help::getRedis()->get($cacheKey);
 	    if($bannerList) {
             $this->setBody($bannerList);
             return true;
@@ -37,8 +36,8 @@ class IndexController extends BaseController {
 
 	    $where = [['show_switch', '=' ,1]];
 	    $bannerList = BannerModel::where($where)->take($take)->orderBy('weigh', 'desc')->get();
-	    $json = $this->getJson(1000, $bannerList);
-        $this->getRedis()->set($cacheKey, $json, 60);
+	    $json = Help::getJson(1000, $bannerList);
+        Help::getRedis()->set($cacheKey, $json, 60);
         $this->setBody($json);
         return true;
     }
@@ -58,7 +57,7 @@ class IndexController extends BaseController {
         }
 
         $cacheKey = $this->getCachePrefix().$page;
-        $messageList = $this->getRedis()->get($cacheKey);
+        $messageList = Help::getRedis()->get($cacheKey);
         if($messageList) {
             $this->setBody($messageList);
             return true;
@@ -66,8 +65,8 @@ class IndexController extends BaseController {
 
         $where = [['message.show_switch', '=', 1], ['message.hot_switch', '=', 1]];
         $messageList = MessageModel::where($where)->leftJoin('user', 'user.id', '=', 'message.user_id')->skip($this->getSkip($page, $take))->take($take)->orderBy('message.weigh', 'desc')->get();
-        $json = $this->getJson(1100, $messageList);
-        $this->getRedis()->set($cacheKey, $json, 60);
+        $json = Help::getJson(1100, $messageList);
+        Help::getRedis()->set($cacheKey, $json, 60);
         $this->setBody($json);
         return true;
     }
@@ -83,16 +82,16 @@ class IndexController extends BaseController {
         }
 
         $cacheKey = $this->getCachePrefix().$messageId;
-        $messageInfo = $this->getRedis()->get($cacheKey);
+        $messageInfo = Help::getRedis()->get($cacheKey);
         if(!$messageInfo) {
             $messageInfo = MessageModel::whereId($messageId)->first();
-            $messageInfo = $this->getJson(1200, $messageInfo);
-            $this->getRedis()->set($cacheKey, $messageInfo, 60);
+            $messageInfo = Help::getJson(1200, $messageInfo);
+            Help::getRedis()->set($cacheKey, $messageInfo, 60);
         }
 
         if($messageInfo) {
             $logArr = [$messageId];
-            $this->writeLog('lookNum', date('Y_m_d_H_i'), $logArr);
+            Help::writeLog('lookNum', date('Y_m_d_H_i'), $logArr);
         }
 
         $this->setBody($messageInfo);
@@ -105,7 +104,7 @@ class IndexController extends BaseController {
     public function likeMessageAction() {
         $messageId = $this->getPost('message_id');
         if(!$messageId || !is_numeric($messageId)) {
-            $this->setBody($this->getJson(1300));
+            $this->setBody(Help::getJson(1300));
             return true;
         }
 
@@ -115,16 +114,32 @@ class IndexController extends BaseController {
         } else {
             $logArr[] = ' ';
         }
-        $this->writeLog('likeNum', date('Y_m_d_H_i'), $logArr);
-        $this->setBody($this->getJson(1301));
+        Help::writeLog('likeNum', date('Y_m_d_H_i'), $logArr);
+        $this->setBody(Help::getJson(1301));
         return true;
     }
 
 
 
     public function addMessageAction() {
-        $client = ClientBuilder::create()->build();
-        print_r($client);die;
+        $hosts = [
+            '47.114.180.172:9200',         // IP + Port
+        ];
+        $client = ClientBuilder::create()->setHosts($hosts)->setRetries(0)->build();
+
+        $params = [
+            'index' => ['message'],
+            'type' => 'message',
+            'body' => [
+                'query' => [
+                    'match' => [ 'content' => '测试' ],
+                ]
+            ]
+        ];
+
+        $response = $client->search($params);
+        print_r($response);
+        return true;
     }
 
 }
