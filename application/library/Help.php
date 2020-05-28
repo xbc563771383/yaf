@@ -32,10 +32,9 @@ class Help {
 
 
     /**
-     * @param bool $throwException
      * @return object
      */
-    public static function getRedis($throwException = true) :object {
+    public static function getRedis() :object {
         return \Yaf\Registry::get('redis');
     }
 

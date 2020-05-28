@@ -9,14 +9,6 @@
 class LoginController extends BaseController
 {
 
-
-    /**
-     * 登录成功后用户数据缓存持续时长
-     * @var int
-     */
-    private $cacheUserInfoKeepDay = 1;
-
-
     /**
      * 密码登陆
      * @return bool
@@ -40,13 +32,11 @@ class LoginController extends BaseController
             return true;
         }
 
-        if($user->password != $password) {
+        if($user->password != md5($password)) {
             $this->setBody(Help::getJson(1403));
             return true;
         }
 
-        $user->cache_at = date('Y-m-d H:i:s');
-        Help::getRedis(false)->set(RedisCacheKey::$USER_INFO.$user->id, Help::jsonEncode($user), Help::getDayTime($this->cacheUserInfoKeepDay));
         $this->setBody($json = Help::getJson(1404, $user));
         return true;
     }
@@ -70,8 +60,9 @@ class LoginController extends BaseController
             return true;
         }
 
-        $code = Help::getRedis()->set(RedisDataKey::$RESET_PASSWORD_CODE.$mobile);
-        if($code) {
+        $code = mt_rand(1000, 9999);
+        $res = Help::getRedis()->set(RedisDataKey::$RESET_PASSWORD_CODE.$mobile, $code, ['nx', 'ex' => $this->resetPasswordCodeKeep]);
+        if(!$res) {
             $this->setBody(Help::getJson(1501));
             return true;
         }
@@ -84,14 +75,7 @@ class LoginController extends BaseController
 
         // TODO 发送短信验证码 （先发送后写入，防止机器注册）
 
-        $code = mt_rand(1000, 9999);
-        $res = Help::getRedis()->set(RedisDataKey::$RESET_PASSWORD_CODE.$mobile, $code, $this->resetPasswordCodeKeep);
-        if(!$res) {
-            $this->setBody(Help::getJson(1504));
-            return true;
-        }
-
-        $this->setBody(Help::getJson(1505));
+        $this->setBody(Help::getJson(1504));
         return true;
     }
 
@@ -108,7 +92,7 @@ class LoginController extends BaseController
         }
 
         $code = $this->getPost('code');
-        if(!$code || !is_numeric($code) || $code >= 10000) {
+        if(!$code || !is_numeric($code) || $code >= 10000 || $code < 1000) {
             $this->setBody(Help::getJson(1601));
             return true;
         }
@@ -126,7 +110,8 @@ class LoginController extends BaseController
         }
 
         $redisCode = Help::getRedis()->get(RedisDataKey::$RESET_PASSWORD_CODE.$mobile);
-        if(!$redisCode || $redisCode != $code) {
+        Help::getRedis()->del(RedisDataKey::$RESET_PASSWORD_CODE.$mobile);
+        if($redisCode != $code) {
             $this->setBody(Help::getJson(1604));
             return true;
         }

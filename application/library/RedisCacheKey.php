@@ -2,6 +2,8 @@
 
 class RedisCacheKey {
 
-    public static $USER_INFO = 'cache_user_info:';
+    public static $CATEGORY_ALL = 'cache:category_all'; // 分类整体缓存
+
+
 
 }

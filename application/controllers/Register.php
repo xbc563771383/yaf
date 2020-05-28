@@ -27,22 +27,20 @@ class RegisterController extends BaseController
             return true;
         }
 
-        $code = Help::getRedis()->get(RedisDataKey::$REGISTER_CODE.$mobile);
-        if($code) {
+        $code = mt_rand(1000, 9999);
+        $res = Help::getRedis()->set(RedisDataKey::$REGISTER_CODE.$mobile, $code, ['nx', 'ex' => $this->registerCodeKeep]);
+        if(!$res) {
             $this->setBody(Help::getJson(1701));
             return true;
         }
 
-        $code = mt_rand(1000, 9999);
-
-        // TODO 发送短信验证码 （先发送后写入，防止机器注册）
-
-
-        $res = Help::getRedis()->set(RedisDataKey::$REGISTER_CODE.$mobile, $code, $this->registerCodeKeep);
-        if(!$res) {
-            $this->setBody(Help::getJson(1703));
+        $user = UserModel::where('mobile', '=', $mobile)->first();
+        if($user) {
+            $this->setBody(Help::getJson(1702));
             return true;
         }
+
+        // TODO 发送短信验证码 （先发送后写入，防止机器注册）
 
         $this->setBody(Help::getJson(1704));
         return true;
@@ -50,12 +48,9 @@ class RegisterController extends BaseController
 
 
     /**
-     * 注册成功后用户数据缓存持续时长
-     * @var int
+     * 注册提交表单
+     * @return bool
      */
-    private $cacheUserInfoKeepDay = 1;
-
-
     public function registerAction() {
         $mobile = $this->getPost('mobile');
         if(!$mobile || !is_numeric($mobile)) {
@@ -64,7 +59,7 @@ class RegisterController extends BaseController
         }
 
         $code = $this->getPost('code');
-        if(!$code || !is_numeric($code) || $code >= 10000) {
+        if(!$code || !is_numeric($code) || $code >= 10000 || $code < 1000) {
             $this->setBody(Help::getJson(1801));
             return true;
         }
@@ -91,7 +86,6 @@ class RegisterController extends BaseController
             return true;
         }
 
-
         $password0 = $this->getPost('password_0');
         $password1 = $this->getPost('password_1');
         if(!$password0 || !$password1) {
@@ -107,6 +101,7 @@ class RegisterController extends BaseController
         $local = $this->getPost('local');
 
         $redisCode =  Help::getRedis()->get(RedisDataKey::$REGISTER_CODE.$mobile);
+        Help::getRedis()->del(RedisDataKey::$REGISTER_CODE.$mobile);
         if($code != $redisCode) {
             $this->setBody(Help::getJson(1813));
             return true;
@@ -131,7 +126,6 @@ class RegisterController extends BaseController
         }
 
         unset($insertData['password']); // 避免删除密码
-        Help::getRedis(false)->set(RedisCacheKey::$USER_INFO.$userId, Help::jsonEncode($insertData), $this->cacheUserInfoKeepDay);
         $this->setBody(Help::getJson(1815, $insertData));
         return true;
     }
