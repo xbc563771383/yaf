@@ -24,6 +24,12 @@ class MessageController extends BaseController
             return true;
         }
 
+        $categoryId = $this->getPost('category_id');
+        if(!$categoryId || !is_numeric($categoryId)) {
+            $this->setBody(Help::getJson(1901));
+            return true;
+        }
+
         $userId = $this->getPost('user_id');
         if(!$userId) {
             $this->setBody(Help::getJson(1902));
@@ -59,6 +65,7 @@ class MessageController extends BaseController
             'message_type' => $messageType,
             'title' => $title,
             'other' => $other,
+            'category_id' => $categoryId,
         ];
 
         try {
