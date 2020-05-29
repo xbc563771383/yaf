@@ -64,7 +64,7 @@ class IndexController extends BaseController {
         }
 
         $where = [['message.show_switch', '=', 1], ['message.hot_switch', '=', 1]];
-        $messageList = MessageModel::where($where)->leftJoin('user', 'user.id', '=', 'message.user_id')->skip($this->getSkip($page, $take))->take($take)->orderBy('message.weigh', 'desc')->get();
+        $messageList = MessageModel::where($where)->leftJoin('user', 'user.id', '=', 'message.user_id')->skip(Help::getSkip($page, $take))->take($take)->orderBy('message.weigh', 'desc')->get();
         $json = Help::getJson(1100, $messageList);
         Help::getRedis()->set($cacheKey, $json, 60);
         $this->setBody($json);
