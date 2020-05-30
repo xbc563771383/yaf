@@ -126,12 +126,13 @@ class Help {
             'type' => 'message',
             'body' => [
                 'query' => [
-                    'match' => [ 'content' => '测试' ],
+                    'match' => ['content' => '热'],
                 ]
             ]
         ];
 
         $response = $client->search($params);
+        print_r($response);die;
         return true;
     }
 

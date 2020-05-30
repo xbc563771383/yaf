@@ -163,6 +163,8 @@ class BuddyController extends BaseController {
      * @return bool
      */
     public function listLikeMeAction() {
+        Help::test();
+
         $page = $this->getQuery('page');
         if(!$page || !is_numeric($page)) {
             $page = 1;
@@ -179,9 +181,6 @@ class BuddyController extends BaseController {
         return true;
     }
 
-
-
-    
 
 
 }

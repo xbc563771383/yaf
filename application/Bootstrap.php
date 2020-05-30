@@ -19,7 +19,6 @@ class Bootstrap extends \Yaf\Bootstrap_Abstract {
     public function _initConfig() {
         //把配置保存起来
         $this->config = \Yaf\Application::app()->getConfig();
-        \Yaf\Registry::set('config', $this->config);
         \Yaf\Dispatcher::getInstance()->autoRender(FALSE);
 	}
 
