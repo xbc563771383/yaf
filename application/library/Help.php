@@ -32,9 +32,24 @@ class Help {
 
 
     /**
+     * 实例化Redis
      * @return object
+     * @throws RedisClusterException
      */
     public static function getRedis() :object {
+        if(!\Yaf\Registry::get('redis')) {
+            $redisServers = [
+                '59.110.163.148:6381',
+                '59.110.163.148:6382',
+                '59.110.163.148:6383',
+                '59.110.163.148:6384',
+                '59.110.163.148:6385',
+                '59.110.163.148:6386',
+            ];
+
+            $redis = new \RedisCluster(null, $redisServers);
+            \Yaf\Registry::set('redis', $redis);
+        }
         return \Yaf\Registry::get('redis');
     }
 
